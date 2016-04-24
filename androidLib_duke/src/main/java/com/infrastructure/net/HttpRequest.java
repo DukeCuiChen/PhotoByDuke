@@ -115,7 +115,7 @@ public class HttpRequest implements Runnable {
 
 				LogWrapper.logD("url:" + newUrl);
 				// 如果这个get的API有缓存时间（大于0）
-				if (urlData.getExpires() > 0) {
+				if (urlData.getExpires() > 0 && !urlData.getIsRefresh()) {
 					final String content = CacheManager.getInstance()
 							.getFileCache(newUrl);
 					if (content != null) {
@@ -155,8 +155,6 @@ public class HttpRequest implements Runnable {
 
 			request.getParams().setParameter(
 					CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
-			request.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
-					30000);
 
 //			/**
 //			 * 添加必要的头信息
@@ -186,68 +184,9 @@ public class HttpRequest implements Runnable {
 						CacheManager.getInstance().putFileCache(newUrl, data, urlData.getExpires());
 					}
 					
-//					final ByteArrayOutputStream content = new ByteArrayOutputStream();
-					
 					final InputStream inn =  new ByteArrayInputStream(data.getBytes("utf-8"));
 					requestCallback.onSuccess(inn);
-					
-					//根据是否支持gzip来使用不同的解析方式
-//					String strResponse = "";
-//					if ((response.getEntity().getContentEncoding() != null)
-//							&& (response.getEntity().getContentEncoding()
-//									.getValue() != null)) {
-//						if (response.getEntity().getContentEncoding()
-//								.getValue().contains("gzip")) {
-////							final InputStream in = response.getEntity()
-////									.getContent();
-//							final InputStream is = new GZIPInputStream(inn);
-//							strResponse = HttpRequest.inputStreamToString(is);
-//							is.close();
-//						} else {
-//							response.getEntity().writeTo(content);
-//							strResponse = new String(content.toByteArray()).trim();
-//						}
-//					} else {
-//						response.getEntity().writeTo(content);
-//						strResponse = new String(content.toByteArray()).trim();
-//						strResponse = "{'isError':false,'errorType':0,'errorMessage':'','result':{'city':'北京','cityid':'101010100','temp':'17','WD':'西南风','WS':'2级','SD':'54%','WSE':'2','time':'23:15','isRadar':'1','Radar':'JC_RADAR_AZ9010_JB','njd':'暂无实况','qy':'1016'}}";
-//					}
-					
-//					final Response responseInJson = JSON.parseObject(
-//							strResponse, Response.class);
-//					if (responseInJson.hasError()) {
-//						if (responseInJson.getErrorType() == 1) {
-//							handler.post(new Runnable() {
-//								@Override
-//								public void run() {
-//									requestCallback.onCookieExpired();
-//								}
-//							});
-//						} else {
-//							handleNetworkError(responseInJson.getErrorMessage());
-//						}
-//					} else {
-//						// 把成功获取到的数据记录到缓存
-//						if (urlData.getNetType().equals(REQUEST_GET)
-//								&& urlData.getExpires() > 0) {
-//							CacheManager.getInstance().putFileCache(newUrl,
-//									responseInJson.getResult(),
-//									urlData.getExpires());
-//						}
-//
-//						handler.post(new Runnable() {
-//
-//							@Override
-//							public void run() {
-//								requestCallback.onSuccess(responseInJson
-//										.getResult());
-//							}
-//
-//						});
-//
-//						// 保存Cookie
-//						saveCookie();
-//					}
+
 				} else {
 					handleNetworkError("网络异常");
 				}

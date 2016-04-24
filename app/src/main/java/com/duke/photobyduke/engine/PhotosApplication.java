@@ -38,7 +38,7 @@ public class PhotosApplication extends Application {
 				.discCacheFileNameGenerator(new Md5FileNameGenerator())
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
 				.memoryCache(new WeakMemoryCache())
-				.writeDebugLogs()
+//				.writeDebugLogs()
 				.build();
 
 		ImageLoader.getInstance().init(config);

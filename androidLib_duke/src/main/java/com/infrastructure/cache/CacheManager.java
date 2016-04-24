@@ -1,12 +1,11 @@
 package com.infrastructure.cache;
 
-import java.io.File;
-
 import android.content.Context;
-import android.os.Environment;
 
 import com.infrastructure.utils.BaseUtils;
 import com.infrastructure.utils.LogWrapper;
+
+import java.io.File;
 
 /**
  * 缓存管理器
@@ -61,7 +60,6 @@ public class CacheManager {
 	 * 
 	 * @param key
 	 * @param data
-	 * @param outDate
 	 */
 	public void putFileCache(final String key, final String data,
 			long expiredTime) {
@@ -91,10 +89,10 @@ public class CacheManager {
 			} else {
 				final File dir = new File(APP_CACHE_PATH);
 				if (!dir.exists()) {
-					LogWrapper.logD("dir:" + dir);
+//					LogWrapper.logD("dir:" + dir);
 					boolean a = dir.mkdirs();
-					LogWrapper.logD("a=" + a);
-					LogWrapper.logD("exits:" + dir.exists());
+//					LogWrapper.logD("a=" + a);
+//					LogWrapper.logD("exits:" + dir.exists());
 				}
 			}
 		}

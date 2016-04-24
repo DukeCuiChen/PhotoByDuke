@@ -57,12 +57,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
                 args.setX(location[0]);
                 args.setY(location[1] - Utils.getStatusBarHeight(context));
                 Bundle bundle =(Bundle) v.getTag();
-                if(bundle != null){
+                if( bundle != null && bundle.getString("text").equalsIgnoreCase((String) v.getTag(R.id.item_title))){
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("args", args);
                     intent.putExtra("com.duke.photobyduke.item", bundle);
-//                    intent.putExtra("bitmap", itemBitmap);
-                    LogWrapper.logD("???????????????");
                     context.startActivity(intent);
                 } else {
                     Snackbar.make(v, "Wait a moment", Snackbar.LENGTH_LONG)
@@ -80,39 +78,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
         if(holder instanceof  ItemViewHolder) {
             final CinemaBean cinemaBean = cinemaList.get(position);
             final ItemViewHolder viewHolder = (ItemViewHolder) holder;
-            viewHolder.tvCinemaTitle.setText(cinemaBean.getCinemaTitle());
-//            context.imageLoader.displayImage(cinemaBean.getCinemaPhotoUrl(), viewHolder.imgPhoto, new ImageLoadingListener() {
-//                @Override
-//                public void onLoadingStarted(String imageUri, View view) {
-//
-//                }
-//
-//                @Override
-//                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-//
-//                }
-//
-//                @Override
-//                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-//                    LogWrapper.logD("onLoadingComplete:" + loadedImage);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putParcelable("bitmap", loadedImage);
-//                    bundle.putString("imageUri", imageUri);
-//                    viewHolder.itemView.setTag(bundle);
-//
-//                }
-//
-//                @Override
-//                public void onLoadingCancelled(String imageUri, View view) {
-//
-//                }
-//            });
+            viewHolder.tvCinemaTitle.setText("" + position + "," + cinemaBean.getCinemaTitle());
+            viewHolder.itemView.setTag(R.id.item_title, cinemaBean.getCinemaTitle());
 
-            context.imageLoader.loadImage(cinemaBean.getCinemaPhotoUrl(), new ImageLoadingListener() {
+            context.imageLoader.displayImage(cinemaBean.getCinemaPhotoUrl(), viewHolder.imgPhoto, new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
-                    LogWrapper.logD("onLoadingStarted view:" + view);
-                    viewHolder.imgPhoto.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_launcher));
+
                 }
 
                 @Override
@@ -122,13 +94,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    LogWrapper.logD("onLoadingComplete width:" + loadedImage.getWidth() + ", height:" + loadedImage.getHeight());
+//                    LogWrapper.logD("onLoadingComplete:" + loadedImage);
                     Bundle bundle = new Bundle();
-//                    bundle.putParcelable("bitmap", loadedImage);
-                    bundle.putString("imageUri", imageUri);
                     bundle.putString("text", cinemaBean.getCinemaTitle());
+                    bundle.putString("imageUri", imageUri);
                     viewHolder.itemView.setTag(bundle);
-                    viewHolder.imgPhoto.setImageBitmap(loadedImage);
+
                 }
 
                 @Override
@@ -147,6 +118,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
+//        LogWrapper.logD("getItemViewType");
+        //用来对不同的Item进行归类
         return TYPE_ITEM;
 
     }

@@ -6,6 +6,7 @@ public class URLData {
 	private String netType;
 	private String url;
 	private String mockClass;
+	private boolean isRefresh;
 
 	public URLData() {
 	}
@@ -48,5 +49,13 @@ public class URLData {
 
 	public void setMockClass(String mockClass) {
 		this.mockClass = mockClass;
+	}
+
+	public boolean getIsRefresh(){
+		return isRefresh;
+	}
+
+	public void setIsRefresh(boolean isRefresh){
+		this.isRefresh = isRefresh;
 	}
 }

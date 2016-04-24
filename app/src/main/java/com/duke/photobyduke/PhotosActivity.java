@@ -10,7 +10,7 @@ import android.util.TypedValue;
 
 import com.duke.photobyduke.adapter.RecyclerAdapter;
 import com.duke.photobyduke.entity.CinemaBean;
-import com.duke.photobyduke.entity.URLgetRecentInfo;
+import com.duke.photobyduke.entity.URLGetRecentInfo;
 import com.duke.photobyduke.net.ApiList;
 import com.duke.photobyduke.net.UrlConfig;
 import com.infrastructure.net.DefaultThreadPool;
@@ -24,10 +24,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class PhotosActivity extends AppBaseActivity{
-	private RecyclerView mrecycleLayout;
+	private RecyclerView mRecycleView;
+//	private ListView mListView;
 	
 	private AbstractRequestCallback photoCallback;
-	private ArrayList<URLgetRecentInfo> urlList;
+	private ArrayList<URLGetRecentInfo> urlList;
 
 	private boolean isRefresh;
 	@Override
@@ -42,11 +43,15 @@ public class PhotosActivity extends AppBaseActivity{
 		setSupportActionBar(toolbar);
 
 
-		mrecycleLayout = (RecyclerView) findViewById(R.id.recycler);
+		mRecycleView = (RecyclerView) findViewById(R.id.recycler);
 		LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
 		mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-		mrecycleLayout.setLayoutManager(mLayoutManager);
-		mrecycleLayout.setItemAnimator(new DefaultItemAnimator());
+		LogWrapper.logD("animator or not :" +  mLayoutManager.supportsPredictiveItemAnimations());
+		mRecycleView.setLayoutManager(mLayoutManager);
+		mRecycleView.setItemAnimator(new DefaultItemAnimator());
+
+//		mListView = (ListView) findViewById(R.id.list);
+//		refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_list);
 
 		refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
 		refreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -80,20 +85,22 @@ public class PhotosActivity extends AppBaseActivity{
 			@Override
 			public void onSuccess(InputStream in) {
 				LogWrapper.logD("duke3");
-				urlList = UrlConfig.getURLList(in);
+				urlList = UrlConfig.getURLList(in, isRefresh);
 				runOnUiThread(new Runnable() {
 					public void run() {
+						isRefresh = false;
 						refreshLayout.setRefreshing(false);
-//						CinemaAdapter adapter = new CinemaAdapter(getArrayCinameBean(urlList), PhotosActivity.this);
-						RecyclerAdapter adapter = new RecyclerAdapter(getArrayCinameBean(urlList), PhotosActivity.this);
-						mrecycleLayout.setAdapter(adapter);
+						RecyclerAdapter adapter = new RecyclerAdapter(getArrayCinemaBean(urlList), PhotosActivity.this);
+						mRecycleView.setAdapter(adapter);
+//						ListAdapter listAdapter = new ListAdapter(getArrayCinemaBean(urlList), PhotosActivity.this);
+//						mListView.setAdapter(listAdapter);
 					}
 				});
 
 			}
 		};
 		
-		ArrayList<RequestParameter> params = new ArrayList<RequestParameter>();
+		ArrayList<RequestParameter> params = new ArrayList<>();
 		RequestParameter rp1 = new RequestParameter("method", "flickr.photos.getRecent");
 		RequestParameter rp2 = new RequestParameter("api_key", "842283d9ea2b11eb980609b618bdda66");
 		params.add(rp1);
@@ -101,8 +108,8 @@ public class PhotosActivity extends AppBaseActivity{
 
 		final URLData urlData = UrlConfigManager.findURL(this, "FlickerAPI");
 		if(isRefresh){
-			urlData.setExpires(0);
-			isRefresh = false;
+			urlData.setIsRefresh(isRefresh);
+//			isRefresh = false;
 		}
 		HttpRequest request = getRequestManager().createRequest(
 				urlData, params, photoCallback);
@@ -110,20 +117,15 @@ public class PhotosActivity extends AppBaseActivity{
 		
 	}
 	
-	private ArrayList<CinemaBean> getArrayCinameBean(ArrayList<URLgetRecentInfo> list){
-		ArrayList<CinemaBean> cinemaBeanList = new ArrayList<CinemaBean>();
-//		CinemaBean mCb = new CinemaBean();
-//		mCb.setCinemaTitle("test by duke");
-////		mCb.setCinemaPhotoUrl(null);
-//		cinemaBeanList.add(mCb);
-		for(URLgetRecentInfo urlinfo : list){
-			CinemaBean mcinemabean = new CinemaBean();
-			mcinemabean.setCinemaTitle(urlinfo.getTitle());
-			mcinemabean.setCinemaPhotoUrl(String.format(ApiList.photoApi, urlinfo.getFarm(),
-					urlinfo.getServer(), urlinfo.getId(), urlinfo.getSecret()));
-//			LogWrapper.logD("photoUrl:" + String.format(ApiList.photoApi, urlinfo.getFarm(),
-//					urlinfo.getServer(), urlinfo.getId(), urlinfo.getSecret()));
-			cinemaBeanList.add(mcinemabean);
+	private ArrayList<CinemaBean> getArrayCinemaBean(ArrayList<URLGetRecentInfo> list){
+		ArrayList<CinemaBean> cinemaBeanList = new ArrayList<>();
+
+		for(URLGetRecentInfo urlInfo : list){
+			CinemaBean mCinemaBean = new CinemaBean();
+			mCinemaBean.setCinemaTitle(urlInfo.getTitle());
+			mCinemaBean.setCinemaPhotoUrl(String.format(ApiList.photoApi, urlInfo.getFarm(),
+					urlInfo.getServer(), urlInfo.getId(), urlInfo.getSecret()));
+			cinemaBeanList.add(mCinemaBean);
 		}
 		return cinemaBeanList;
 		

@@ -2,7 +2,7 @@ package com.duke.photobyduke.net;
 
 import android.util.Xml;
 
-import com.duke.photobyduke.entity.URLgetRecentInfo;
+import com.duke.photobyduke.entity.URLGetRecentInfo;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -12,10 +12,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class UrlConfig {
-	private static ArrayList<URLgetRecentInfo> urlList;
+	private static ArrayList<URLGetRecentInfo> urlList;
 
 	private static void fetchUrlDataFromXml(InputStream in) {
-		urlList = new ArrayList<URLgetRecentInfo>();
+		urlList = new ArrayList<URLGetRecentInfo>();
 
 //		final XmlResourceParser xmlParser = activity.getApplication()
 //				.getResources().getXml(R.xml.url);
@@ -42,7 +42,7 @@ public class UrlConfig {
 					if ("photo".equals(xmlParser.getName())) {
 						final String id = xmlParser.getAttributeValue(null,
 								"id");
-						final URLgetRecentInfo urlData = new URLgetRecentInfo();
+						final URLGetRecentInfo urlData = new URLGetRecentInfo();
 						urlData.setId(id);
 						urlData.setOwner(xmlParser.getAttributeValue(null, "owner"));
 						urlData.setSecret(xmlParser.getAttributeValue(null, "secret"));
@@ -74,13 +74,12 @@ public class UrlConfig {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-////			xmlParser.close();
 		}
 	}
 
-	public static ArrayList<URLgetRecentInfo> getURLList(InputStream in) {
+	public static ArrayList<URLGetRecentInfo> getURLList(InputStream in, boolean isRefresh) {
 		// 如果urlList还没有数据（第一次），或者被回收了，那么（重新）加载xml
-		if (urlList == null || urlList.isEmpty()){
+		if (urlList == null || urlList.isEmpty() || isRefresh){
 			fetchUrlDataFromXml(in);			
 		} 
 

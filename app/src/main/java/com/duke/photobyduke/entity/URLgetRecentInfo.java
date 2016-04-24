@@ -1,6 +1,6 @@
 package com.duke.photobyduke.entity;
 
-public class URLgetRecentInfo {
+public class URLGetRecentInfo {
 	private String id;
 	private String owner;
 	private String secret;
@@ -11,7 +11,7 @@ public class URLgetRecentInfo {
 	private String isfriend;
 	private String isfamily;
 
-	public URLgetRecentInfo() {
+	public URLGetRecentInfo() {
 	}
 
 	public String getId() {

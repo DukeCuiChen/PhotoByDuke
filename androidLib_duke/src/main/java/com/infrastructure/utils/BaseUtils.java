@@ -168,7 +168,7 @@ public class BaseUtils {
 		FileOutputStream fos = null;
 		ObjectOutputStream oos = null;
 		File f = new File(path);
-        LogWrapper.logD("f:" + f);
+//        LogWrapper.logD("f:" + f);
 //        if (!f.exists()){
 //            LogWrapper.logD("f no exist");
 //            f.mkdir();

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,10 +56,8 @@ public class DetailActivity extends AppBaseActivity {
     protected void initVariables() {
         Intent intent = getIntent();
         args = intent.getParcelableExtra("args");
-        LogWrapper.logD("" + args);
         imageUri = intent.getBundleExtra("com.duke.photobyduke.item").getString("imageUri");
         text = intent.getBundleExtra("com.duke.photobyduke.item").getString("text");
-        Log.d("duke", "bitmap:" +  ", imageUri:" + imageUri);
         mHandler = new Handler();
 
         options = new DisplayImageOptions.Builder()
@@ -76,11 +73,10 @@ public class DetailActivity extends AppBaseActivity {
     protected void initViews(Bundle savedInstanceState) {
         setContentView(R.layout.activity_detail);
         getSupportActionBar().hide();
+
         mLayout = (CardView) findViewById(R.id.detail_layout);
         imageView = (ImageView) findViewById(R.id.detail_image);
         frameLayout = (FrameLayout) findViewById(R.id.detail_frame);
-
-
 
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -130,7 +126,7 @@ public class DetailActivity extends AppBaseActivity {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        LogWrapper.logD("onAnimationEnd width:" + imageView.getWidth() + ", height:" + imageView.getHeight());
+//                        LogWrapper.logD("onAnimationEnd width:" + imageView.getWidth() + ", height:" + imageView.getHeight());
                         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new ImageLoadingListener() {
                             @Override
                             public void onLoadingStarted(String imageUri, View view) {
@@ -154,15 +150,6 @@ public class DetailActivity extends AppBaseActivity {
 
                             }
                         });
-
-//                        textView = new TextView(DetailActivity.this);
-//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dip2px(DetailActivity.this, 85));
-//                        layoutParams.gravity = Gravity.BOTTOM;
-////                        textView.setGravity(Gravity.BOTTOM);
-//                        textView.setBackgroundColor(0xbb000000);
-//                        textView.setTextColor(0xffffffff);
-//                        textView.setText(text);
-//                        mLayout.addView(textView, layoutParams);
 
                     }
 
@@ -205,10 +192,10 @@ public class DetailActivity extends AppBaseActivity {
      */
     private void setLayout(Activity context, View view, int x, int y, int height) {
         ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(view.getLayoutParams());
-        Log.d("duke", "left:" + x );
-        Log.d("duke", "top:" + y );
-        Log.d("duke", "right:" + x);
-        Log.d("duke", "bottom:" + (y + height));
+//        Log.d("duke", "left:" + x );
+//        Log.d("duke", "top:" + y );
+//        Log.d("duke", "right:" + x);
+//        Log.d("duke", "bottom:" + (y + height));
         margin.height = height;
         margin.setMargins(x, y, x, y + margin.height);          //距离左上右下的距离，而不是直接的坐标
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(margin);
