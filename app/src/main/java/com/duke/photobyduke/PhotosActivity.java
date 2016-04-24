@@ -14,7 +14,7 @@ import com.duke.photobyduke.entity.URLGetRecentInfo;
 import com.duke.photobyduke.net.ApiList;
 import com.duke.photobyduke.net.UrlConfig;
 import com.infrastructure.net.DefaultThreadPool;
-import com.infrastructure.net.HttpRequest;
+import com.infrastructure.net.OkHttpRequestTest;
 import com.infrastructure.net.RequestParameter;
 import com.infrastructure.net.URLData;
 import com.infrastructure.net.UrlConfigManager;
@@ -111,8 +111,9 @@ public class PhotosActivity extends AppBaseActivity{
 			urlData.setIsRefresh(isRefresh);
 //			isRefresh = false;
 		}
-		HttpRequest request = getRequestManager().createRequest(
-				urlData, params, photoCallback);
+//		HttpRequest request = getRequestManager().createRequest(
+//				urlData, params, photoCallback);
+		OkHttpRequestTest request = new OkHttpRequestTest(urlData, params, photoCallback);
 		DefaultThreadPool.getInstance().execute(request);
 		
 	}

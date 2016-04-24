@@ -21,6 +21,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -156,6 +158,11 @@ public class HttpRequest implements Runnable {
 			request.getParams().setParameter(
 					CoreConnectionPNames.CONNECTION_TIMEOUT, 30000);
 
+			try {
+				JSONObject obj = new JSONObject("{\"name\":\"haha\"}");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 //			/**
 //			 * 添加必要的头信息
 //			 */
